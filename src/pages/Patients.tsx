@@ -22,12 +22,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { clinicApiService, type Patient } from '../services/clinicApiService';
+import PatientModal from '../components/Modals/PatientModal';
 import { toast } from 'sonner';
 
 function Patients() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
 
   useEffect(() => {
     loadPatients();
@@ -90,14 +92,17 @@ function Patients() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Patients
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Manage your patients and their medical information
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button 
+          onClick={() => setIsPatientModalOpen(true)}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Patient
         </Button>
@@ -269,12 +274,21 @@ function Patients() {
           <p className="text-gray-500 dark:text-gray-400">
             {searchTerm ? 'No patients found matching your search.' : 'No patients added yet.'}
           </p>
-          <Button className="mt-4">
+          <Button 
+            onClick={() => setIsPatientModalOpen(true)}
+            className="mt-4"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Your First Patient
           </Button>
         </div>
       )}
+
+      {/* Patient Modal */}
+      <PatientModal 
+        isOpen={isPatientModalOpen} 
+        onClose={() => setIsPatientModalOpen(false)} 
+      />
     </div>
   );
 }

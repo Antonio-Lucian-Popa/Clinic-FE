@@ -10,7 +10,10 @@ import {
   DollarSign
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { clinicApiService, type Appointment } from '../services/clinicApiService';
+import AppointmentModal from '../components/Modals/AppointmentModal';
+import PatientModal from '../components/Modals/PatientModal';
 
 interface DashboardStats {
   totalPatients: number;
@@ -32,6 +35,8 @@ function Dashboard() {
   });
   const [recentAppointments, setRecentAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
+  const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -116,7 +121,7 @@ function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Dashboard
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -211,22 +216,43 @@ function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <button className="w-full flex items-center space-x-3 p-4 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors">
+              <Button 
+                onClick={() => setIsPatientModalOpen(true)}
+                className="w-full flex items-center space-x-3 p-4 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-blue-900 dark:text-blue-100"
+                variant="ghost"
+              >
                 <UserPlus className="h-5 w-5 text-blue-600" />
                 <span className="font-medium text-blue-900 dark:text-blue-100">Add New Patient</span>
-              </button>
-              <button className="w-full flex items-center space-x-3 p-4 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors">
+              </Button>
+              <Button 
+                onClick={() => setIsAppointmentModalOpen(true)}
+                className="w-full flex items-center space-x-3 p-4 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors text-green-900 dark:text-green-100"
+                variant="ghost"
+              >
                 <Calendar className="h-5 w-5 text-green-600" />
                 <span className="font-medium text-green-900 dark:text-green-100">Schedule Appointment</span>
-              </button>
-              <button className="w-full flex items-center space-x-3 p-4 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg transition-colors">
+              </Button>
+              <Button 
+                className="w-full flex items-center space-x-3 p-4 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg transition-colors text-purple-900 dark:text-purple-100"
+                variant="ghost"
+              >
                 <Activity className="h-5 w-5 text-purple-600" />
                 <span className="font-medium text-purple-900 dark:text-purple-100">View Reports</span>
-              </button>
+              </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals */}
+      <AppointmentModal 
+        isOpen={isAppointmentModalOpen} 
+        onClose={() => setIsAppointmentModalOpen(false)} 
+      />
+      <PatientModal 
+        isOpen={isPatientModalOpen} 
+        onClose={() => setIsPatientModalOpen(false)} 
+      />
     </div>
   );
 }

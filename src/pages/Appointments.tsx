@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { clinicApiService, type Appointment } from '../services/clinicApiService';
+import AppointmentModal from '../components/Modals/AppointmentModal';
 import { toast } from 'sonner';
 
 function Appointments() {
@@ -30,6 +31,7 @@ function Appointments() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
 
   useEffect(() => {
     loadAppointments();
@@ -113,14 +115,17 @@ function Appointments() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Appointments
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Manage patient appointments and scheduling
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button 
+          onClick={() => setIsAppointmentModalOpen(true)}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Schedule Appointment
         </Button>
@@ -230,7 +235,10 @@ function Appointments() {
                   : 'No appointments scheduled yet.'
                 }
               </p>
-              <Button className="mt-4">
+              <Button 
+                onClick={() => setIsAppointmentModalOpen(true)}
+                className="mt-4"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Schedule First Appointment
               </Button>
@@ -292,6 +300,12 @@ function Appointments() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Appointment Modal */}
+      <AppointmentModal 
+        isOpen={isAppointmentModalOpen} 
+        onClose={() => setIsAppointmentModalOpen(false)} 
+      />
     </div>
   );
 }

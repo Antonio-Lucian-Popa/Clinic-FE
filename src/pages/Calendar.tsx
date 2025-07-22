@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { clinicApiService, type Appointment } from '../services/clinicApiService';
+import AppointmentModal from '../components/Modals/AppointmentModal';
 import { toast } from 'sonner';
 
 interface CalendarDay {
@@ -18,6 +19,7 @@ function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
 
   useEffect(() => {
     loadAppointments();
@@ -137,14 +139,17 @@ function Calendar() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Calendar
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             View and manage your appointment schedule
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button 
+          onClick={() => setIsAppointmentModalOpen(true)}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Appointment
         </Button>
@@ -287,7 +292,13 @@ function Calendar() {
                       No appointments scheduled
                     </p>
                   )}
-                  <Button size="sm" className="w-full">
+                  <Button 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => {
+                      setIsAppointmentModalOpen(true);
+                    }}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Appointment
                   </Button>
@@ -332,6 +343,13 @@ function Calendar() {
           </Card>
         </div>
       </div>
+
+      {/* Appointment Modal */}
+      <AppointmentModal 
+        isOpen={isAppointmentModalOpen} 
+        onClose={() => setIsAppointmentModalOpen(false)}
+        selectedDate={selectedDate?.toISOString().split('T')[0]}
+      />
     </div>
   );
 }
