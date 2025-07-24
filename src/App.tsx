@@ -6,6 +6,8 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from './components/ui/sonner';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ClinicSetupPage from './pages/ClinicSetupPage';
+import InvitationPage from './pages/InvitationPage';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Appointments from './pages/Appointments';
@@ -14,6 +16,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
+import ClinicStatusChecker from './components/Auth/ClinicStatusChecker';
 import './App.css';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';
@@ -29,14 +32,34 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               
+              {/* Clinic setup routes */}
+              <Route 
+                path="/clinic-setup" 
+                element={
+                  <ProtectedRoute>
+                    <ClinicSetupPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/invitation" 
+                element={
+                  <ProtectedRoute>
+                    <InvitationPage />
+                  </ProtectedRoute>
+                } 
+              />
+              
               {/* Protected routes */}
               <Route
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Dashboard />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Dashboard />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />
@@ -44,9 +67,11 @@ function App() {
                 path="/dashboard"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Dashboard />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Dashboard />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />
@@ -54,9 +79,11 @@ function App() {
                 path="/patients"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Patients />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Patients />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />
@@ -64,9 +91,11 @@ function App() {
                 path="/appointments"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Appointments />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Appointments />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />
@@ -74,9 +103,11 @@ function App() {
                 path="/calendar"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Calendar />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Calendar />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />
@@ -84,9 +115,11 @@ function App() {
                 path="/profile"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Profile />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Profile />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />
@@ -94,9 +127,11 @@ function App() {
                 path="/settings"
                 element={
                   <ProtectedRoute>
-                    <Layout>
-                      <Settings />
-                    </Layout>
+                    <ClinicStatusChecker>
+                      <Layout>
+                        <Settings />
+                      </Layout>
+                    </ClinicStatusChecker>
                   </ProtectedRoute>
                 }
               />

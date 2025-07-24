@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { Eye, EyeOff, Activity, Mail, Lock, User, UserCheck } from 'lucide-react';
+import { Eye, EyeOff, Activity, Mail, Lock, User, UserCheck, CheckCircle, ArrowRight } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 
 function RegisterPage() {
@@ -24,6 +25,8 @@ function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [serverMessage, setServerMessage] = useState('');
 
   const { register, loginWithGoogle, isAuthenticated } = useAuth();
 
@@ -95,15 +98,27 @@ function RegisterPage() {
 
     try {
       setIsLoading(true);
-      await register({
+      const response = await register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
         role: formData.role
       });
+      
+      // Dacă înregistrarea necesită verificare email
+      if (response && response.requiresEmailVerification) {
+        setServerMessage(response.message || 'Cont creat. Verifică emailul pentru activare.');
+        setRegistrationSuccess(true);
+      }
     } catch (error) {
-      console.error('Registration failed:', error);
+      // Dacă serverul returnează un mesaj specific
+      if (error.response?.data?.message) {
+        setServerMessage(error.response.data.message);
+        setRegistrationSuccess(true);
+      } else {
+        console.error('Registration failed:', error);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -134,7 +149,7 @@ function RegisterPage() {
               <Activity className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h1 className="text-left text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Join ClinicSaaS
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
@@ -142,8 +157,37 @@ function RegisterPage() {
           </p>
         </div>
 
+        {/* Success Message */}
+        {registrationSuccess && (
+          <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur">
+            <CardContent className="p-6 text-center space-y-4">
+              <div className="flex justify-center">
+                <CheckCircle className="h-16 w-16 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Înregistrare Reușită!
+              </h2>
+              <Alert className="border-green-200 bg-green-50 dark:bg-green-900/20">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800 dark:text-green-200">
+                  {serverMessage}
+                </AlertDescription>
+              </Alert>
+              <Button 
+                asChild 
+                className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700"
+              >
+                <Link to="/login" className="flex items-center justify-center">
+                  Mergi la Login
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
         {/* Register card */}
-        <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur">
+        {!registrationSuccess && (
+          <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl">Create Account</CardTitle>
             <CardDescription>
@@ -349,6 +393,7 @@ function RegisterPage() {
             </div>
           </CardContent>
         </Card>
+        )}
       </div>
     </div>
   );

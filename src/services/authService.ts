@@ -21,6 +21,8 @@ export interface RegisterData {
 export interface LoginResponse {
   token: string;
   user: User;
+  requiresEmailVerification?: boolean;
+  message?: string;
 }
 
 class AuthService {
@@ -45,7 +47,7 @@ class AuthService {
 
   async loginWithGoogle(credential: string): Promise<User> {
     try {
-      const data: LoginResponse = await apiRequest.post('/api/auth/google', { credential });
+      const data: LoginResponse = await apiRequest.post('/api/auth/oauth/google', { credential });
       this.token = data.token;
       localStorage.setItem('authToken', this.token!);
 
@@ -59,8 +61,17 @@ class AuthService {
   async register(userData: RegisterData): Promise<User> {
     try {
       const data: LoginResponse = await apiRequest.post('/api/auth/register', userData);
-      this.token = data.token;
-      localStorage.setItem('authToken', this.token!);
+      
+      // Dacă înregistrarea necesită verificare email, nu salvăm token-ul încă
+      if (data.requiresEmailVerification) {
+        return { ...data, requiresEmailVerification: true, message: data.message } as any;
+      }
+      
+      // Altfel, salvăm token-ul și returnăm user-ul
+      if (data.token) {
+        this.token = data.token;
+        localStorage.setItem('authToken', this.token!);
+      }
 
       return data.user;
     } catch (error) {
