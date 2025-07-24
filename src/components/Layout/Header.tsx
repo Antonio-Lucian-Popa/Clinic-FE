@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Search, Sun, Moon, LogOut } from 'lucide-react';
+import { Bell, Search, Sun, Moon, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 
-function Header() {
+interface HeaderProps {
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (open: boolean) => void;
+}
+
+function Header({ isMobileMenuOpen, setIsMobileMenuOpen }: HeaderProps) {
+
   const { user, logout } = useAuth();
   const { theme, setTheme, isDark } = useTheme();
 
@@ -30,6 +36,16 @@ function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 lg:left-64 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
       <div className="flex h-full items-center justify-between px-4 lg:px-6">
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden mr-4">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
         {/* Search */}
         <div className="flex flex-1 items-center max-w-md">
           <div className="relative hidden sm:block w-full">
@@ -59,8 +75,8 @@ function Header() {
           {/* Notifications */}
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-4 w-4" />
-            <Badge 
-              variant="destructive" 
+            <Badge
+              variant="destructive"
               className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
             >
               3

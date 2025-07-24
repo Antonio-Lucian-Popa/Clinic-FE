@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Plus, 
-  Filter, 
+import {
+  Search,
+  Plus,
+  Filter,
   MoreVertical,
   User,
   Mail,
@@ -48,7 +48,7 @@ function Patients() {
     }
   };
 
-  const filteredPatients = patients.filter(patient => 
+  const filteredPatients = patients.filter(patient =>
     patient.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,11 +63,11 @@ function Patients() {
     const birthDate = new Date(dateOfBirth);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    
+
     return age;
   };
 
@@ -92,14 +92,14 @@ function Patients() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl text-left font-bold text-gray-900 dark:text-white">
             Patients
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Manage your patients and their medical information
           </p>
         </div>
-        <Button 
+        <Button
           onClick={() => setIsPatientModalOpen(true)}
           className="bg-blue-600 hover:bg-blue-700"
         >
@@ -166,7 +166,10 @@ function Patients() {
       {/* Patients Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPatients.map((patient) => (
-          <Card key={patient.id} className="hover:shadow-lg transition-shadow duration-200">
+          <Card
+            key={patient.id}
+            className="flex flex-col min-h-[360px] hover:shadow-lg transition-shadow duration-200"
+          >
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -199,63 +202,68 @@ function Patients() {
                 </DropdownMenu>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Mail className="h-4 w-4 mr-2" />
-                  <span className="truncate">{patient.email}</span>
+
+            {/* Full height content container */}
+            <CardContent className="flex flex-col justify-between flex-1">
+              <div className="space-y-4 flex-1">
+                {/* Contact Info */}
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <Mail className="h-4 w-4 mr-2" />
+                    <span className="truncate">{patient.email}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <Phone className="h-4 w-4 mr-2" />
+                    <span>{patient.phone}</span>
+                  </div>
                 </div>
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Phone className="h-4 w-4 mr-2" />
-                  <span>{patient.phone}</span>
+
+                {/* Medical Info */}
+                <div className="space-y-2">
+                  {patient.medicalHistory.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Medical History:
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {patient.medicalHistory.slice(0, 2).map((condition, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {condition}
+                          </Badge>
+                        ))}
+                        {patient.medicalHistory.length > 2 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{patient.medicalHistory.length - 2} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {patient.allergies.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Allergies:
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {patient.allergies.slice(0, 2).map((allergy, index) => (
+                          <Badge key={index} variant="destructive" className="text-xs">
+                            {allergy}
+                          </Badge>
+                        ))}
+                        {patient.allergies.length > 2 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{patient.allergies.length - 2} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Medical Info */}
-              <div className="space-y-2">
-                {patient.medicalHistory.length > 0 && (
-                  <div>
-                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Medical History:
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                      {patient.medicalHistory.slice(0, 2).map((condition, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {condition}
-                        </Badge>
-                      ))}
-                      {patient.medicalHistory.length > 2 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{patient.medicalHistory.length - 2} more
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {patient.allergies.length > 0 && (
-                  <div>
-                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Allergies:
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                      {patient.allergies.slice(0, 2).map((allergy, index) => (
-                        <Badge key={index} variant="destructive" className="text-xs">
-                          {allergy}
-                        </Badge>
-                      ))}
-                      {patient.allergies.length > 2 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{patient.allergies.length - 2} more
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="flex space-x-2 pt-2">
+              {/* Actions always aligned at bottom */}
+              <div className="flex space-x-2 pt-4 mt-auto">
                 <Button size="sm" className="flex-1">
                   View Profile
                 </Button>
@@ -268,13 +276,14 @@ function Patients() {
         ))}
       </div>
 
+
       {filteredPatients.length === 0 && (
         <div className="text-center py-12">
           <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-500 dark:text-gray-400">
             {searchTerm ? 'No patients found matching your search.' : 'No patients added yet.'}
           </p>
-          <Button 
+          <Button
             onClick={() => setIsPatientModalOpen(true)}
             className="mt-4"
           >
@@ -285,9 +294,9 @@ function Patients() {
       )}
 
       {/* Patient Modal */}
-      <PatientModal 
-        isOpen={isPatientModalOpen} 
-        onClose={() => setIsPatientModalOpen(false)} 
+      <PatientModal
+        isOpen={isPatientModalOpen}
+        onClose={() => setIsPatientModalOpen(false)}
       />
     </div>
   );
