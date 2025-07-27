@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import LoadingSpinner from '../components/UI/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+
 
 function RegisterPage() {
   const [formData, setFormData] = useState({

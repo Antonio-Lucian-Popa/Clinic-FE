@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '../UI/LoadingSpinner';
+import LoadingSpinner from '../ui/LoadingSpinner';
+
 
 interface ClinicStatusCheckerProps {
   children: React.ReactNode;

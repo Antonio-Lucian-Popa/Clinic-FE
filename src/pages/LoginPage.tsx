@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import LoadingSpinner from '../components/UI/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
