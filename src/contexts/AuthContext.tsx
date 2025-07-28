@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(userData);
       toast.success('Welcome back!');
       // Redirect to home or dashboard as needed
+      window.location.href = '/';
     } catch (error: any) {
       toast.error(error.message || 'Google login failed');
       throw error;

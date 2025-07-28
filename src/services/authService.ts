@@ -19,7 +19,8 @@ export interface RegisterData {
 }
 
 export interface LoginResponse {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   user: User;
   requiresEmailVerification?: boolean;
   message?: string;
@@ -35,7 +36,7 @@ class AuthService {
   async login(email: string, password: string): Promise<User> {
     try {
       const data: LoginResponse = await apiRequest.post('/api/auth/login', { email, password });
-      this.token = data.token;
+      this.token = data.accessToken;
       localStorage.setItem('authToken', this.token!);
 
       return data.user;
@@ -48,7 +49,7 @@ class AuthService {
   async loginWithGoogle(credential: string): Promise<User> {
     try {
       const data: LoginResponse = await apiRequest.post('/api/auth/oauth/google', { idToken: credential });
-      this.token = data.token;
+      this.token = data.accessToken;
       localStorage.setItem('authToken', this.token!);
 
       return data.user;
@@ -68,8 +69,8 @@ class AuthService {
       }
       
       // Altfel, salvăm token-ul și returnăm user-ul
-      if (data.token) {
-        this.token = data.token;
+      if (data.accessToken) {
+        this.token = data.accessToken;
         localStorage.setItem('authToken', this.token!);
       }
 
