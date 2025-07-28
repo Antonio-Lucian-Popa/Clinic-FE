@@ -5,7 +5,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: string;
+  roles: string[];
   avatar?: string;
   createdAt: string;
 }
@@ -97,7 +97,7 @@ class AuthService {
         email: 'doctor@clinic.com',
         firstName: 'Dr. Sarah',
         lastName: 'Johnson',
-        role: 'DOCTOR',
+        roles: ['DOCTOR'],
         avatar: 'https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2',
         createdAt: new Date().toISOString()
       };

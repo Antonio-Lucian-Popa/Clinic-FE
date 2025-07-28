@@ -50,11 +50,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = async (credential: string) => {
     try {
       setIsLoading(true);
-      const userData = await authService.loginWithGoogle(credential);
+      await authService.loginWithGoogle(credential);
+      const userData = await authService.getCurrentUser(); // Assuming this fetches the user data
       setUser(userData);
+     // setUser(userData);
       toast.success('Welcome back!');
-      // Redirect to home or dashboard as needed
-      window.location.href = '/';
+      console.log('Google login successful:', userData);
+      // check if roles have inside just USER
+      if(userData) {
+        const isUserRole = userData.roles.includes('USER');
+        // Redirect to home or dashboard as needed
+        if (!isUserRole) {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/update-profile';
+        }
+      }
     } catch (error: any) {
       toast.error(error.message || 'Google login failed');
       throw error;
