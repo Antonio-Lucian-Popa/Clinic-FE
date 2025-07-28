@@ -53,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userData = await authService.loginWithGoogle(credential);
       setUser(userData);
       toast.success('Welcome back!');
+      // Redirect to home or dashboard as needed
     } catch (error: any) {
       toast.error(error.message || 'Google login failed');
       throw error;
@@ -67,6 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const newUser = await authService.register(userData);
       setUser(newUser);
       toast.success('Account created successfully!');
+      // Redirect to login or home page as needed
+      window.location.href = '/login';
     } catch (error: any) {
       toast.error(error.message || 'Registration failed');
       throw error;

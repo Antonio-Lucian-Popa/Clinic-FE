@@ -47,7 +47,7 @@ class AuthService {
 
   async loginWithGoogle(credential: string): Promise<User> {
     try {
-      const data: LoginResponse = await apiRequest.post('/api/auth/oauth/google', { credential });
+      const data: LoginResponse = await apiRequest.post('/api/auth/oauth/google', { idToken: credential });
       this.token = data.token;
       localStorage.setItem('authToken', this.token!);
 
