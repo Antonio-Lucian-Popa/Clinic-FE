@@ -9,7 +9,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: (credential: string) => Promise<void>;
   logout: () => Promise<void>;
-  register: (userData: RegisterData) => Promise<void>;
+  register: (userData: RegisterData) => Promise<string>;
+  updateProfile: (profileData: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -74,16 +75,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (userData: RegisterData) => {
+  const register = async (userData: RegisterData): Promise<string> => {
     try {
       setIsLoading(true);
-      const newUser = await authService.register(userData);
-      setUser(newUser);
-      toast.success('Account created successfully!');
+      const registerResponse = await authService.register(userData);
+      toast.success(registerResponse || 'Registration successful! Please check your email to activate your account.');
       // Redirect to login or home page as needed
       window.location.href = '/login';
+      return registerResponse || 'Registration successful! Please check your email to activate your account.';
     } catch (error: any) {
       toast.error(error.message || 'Registration failed');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+   const updateProfile = async (profileData: Partial<User>) => {
+    try {
+      setIsLoading(true);
+      const updatedUser = await authService.updateProfile(profileData);
+      setUser(updatedUser);
+      toast.success('Profile updated successfully!');
+    } catch (error: any) {
+      toast.error(error.message || 'Profile update failed');
       throw error;
     } finally {
       setIsLoading(false);
@@ -100,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const value = {
+const value = {
     user,
     isLoading,
     isAuthenticated: !!user,
@@ -108,6 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loginWithGoogle,
     logout,
     register,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -20,7 +20,7 @@ function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'DOCTOR'
+     roles: ['DOCTOR']
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -53,7 +53,7 @@ function RegisterPage() {
   const handleRoleChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
-      role: value
+      roles: [value]
     }));
   };
 
@@ -104,18 +104,28 @@ function RegisterPage() {
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        role: formData.role
+        roles: formData.roles
       });
       
       // Dacă înregistrarea necesită verificare email
-      if (response && response.requiresEmailVerification) {
-        setServerMessage(response.message || 'Cont creat. Verifică emailul pentru activare.');
+      if (response) {
+        setServerMessage(response|| 'Cont creat. Verifică emailul pentru activare.');
         setRegistrationSuccess(true);
       }
     } catch (error) {
       // Dacă serverul returnează un mesaj specific
-      if (error.response?.data?.message) {
-        setServerMessage(error.response.data.message);
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        typeof (error as any).response === 'object' &&
+        (error as any).response !== null &&
+        'data' in (error as any).response &&
+        typeof (error as any).response.data === 'object' &&
+        (error as any).response.data !== null &&
+        'message' in (error as any).response.data
+      ) {
+        setServerMessage((error as any).response.data.message);
         setRegistrationSuccess(true);
       } else {
         console.error('Registration failed:', error);
@@ -264,7 +274,7 @@ function RegisterPage() {
               {/* Role field */}
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
-                <Select value={formData.role} onValueChange={handleRoleChange}>
+                <Select value={formData.roles[0]} onValueChange={handleRoleChange}>
                   <SelectTrigger className="w-full">
                     <div className="flex items-center">
                       <UserCheck className="h-4 w-4 mr-2 text-gray-400" />

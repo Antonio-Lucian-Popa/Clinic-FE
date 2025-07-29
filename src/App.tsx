@@ -18,6 +18,7 @@ import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ClinicStatusChecker from './components/Auth/ClinicStatusChecker';
 import './App.css';
+import ProfileEditPage from './pages/ProfileEditPage';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
@@ -31,6 +32,16 @@ function App() {
               {/* Public routes */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+
+               {/* Profile edit route for Google users */}
+              <Route 
+                path="/profile-edit" 
+                element={
+                  <ProtectedRoute>
+                    <ProfileEditPage />
+                  </ProtectedRoute>
+                } 
+              />
               
               {/* Clinic setup routes */}
               <Route 

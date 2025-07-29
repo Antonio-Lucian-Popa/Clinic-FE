@@ -26,6 +26,11 @@ function ClinicStatusChecker({ children }: ClinicStatusCheckerProps) {
       return;
     }
 
+    // Check if user has USER role and needs to complete profile
+    if (user.roles?.includes('USER')) {
+      setIsLoading(false);
+      return;
+    }
     checkClinicStatus();
   }, [isAuthenticated, user]);
 
@@ -37,8 +42,8 @@ function ClinicStatusChecker({ children }: ClinicStatusCheckerProps) {
       // Mock logic pentru demo
       const mockStatus: ClinicStatus = {
         hasClinic: false, // Simulăm că nu are cabinet
-        isOwner: user?.role === 'OWNER',
-        needsInvitation: user?.role === 'DOCTOR' || user?.role === 'ASSISTANT'
+        isOwner: !!user?.roles?.includes('OWNER'),
+        needsInvitation: user?.roles?.includes('DOCTOR') || user?.roles?.includes('ASSISTANT')
       };
 
       setClinicStatus(mockStatus);
@@ -63,6 +68,10 @@ function ClinicStatusChecker({ children }: ClinicStatusCheckerProps) {
     return <Navigate to="/login" replace />;
   }
 
+  // Redirect users with USER role to profile edit
+  if (user?.roles?.includes('USER')) {
+    return <Navigate to="/profile-edit" replace />;
+  }
   if (!clinicStatus?.hasClinic) {
     // Dacă utilizatorul este OWNER și nu are cabinet, îl redirecționăm la setup
     if (clinicStatus?.isOwner) {

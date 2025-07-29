@@ -15,7 +15,7 @@ export interface RegisterData {
   password: string;
   firstName: string;
   lastName: string;
-  role: string;
+  roles: string[];
 }
 
 export interface LoginResponse {
@@ -59,22 +59,10 @@ class AuthService {
     }
   }
 
-  async register(userData: RegisterData): Promise<User> {
+  async register(userData: RegisterData): Promise<string> {
     try {
-      const data: LoginResponse = await apiRequest.post('/api/auth/register', userData);
-      
-      // Dacă înregistrarea necesită verificare email, nu salvăm token-ul încă
-      if (data.requiresEmailVerification) {
-        return { ...data, requiresEmailVerification: true, message: data.message } as any;
-      }
-      
-      // Altfel, salvăm token-ul și returnăm user-ul
-      if (data.accessToken) {
-        this.token = data.accessToken;
-        localStorage.setItem('authToken', this.token!);
-      }
-
-      return data.user;
+      const data: string = await apiRequest.post('/api/auth/register', userData);
+      return data;
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -119,6 +107,16 @@ class AuthService {
 
   getToken(): string | null {
     return this.token;
+  }
+
+    async updateProfile(profileData: Partial<User>): Promise<User> {
+    try {
+      const updatedUser: User = await apiRequest.put('/api/auth/profile', profileData);
+      return updatedUser;
+    } catch (error) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
   }
 }
 
