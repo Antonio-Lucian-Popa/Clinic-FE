@@ -102,12 +102,30 @@ class ClinicApiService {
     return await clinicApiRequest.post<Clinic>('/api/cabinets', clinicData);
   }
 
+  async getClinics(): Promise<Clinic[]> {
+    try {
+      return await clinicApiRequest.get<Clinic[]>('/api/cabinets');
+    } catch (error) {
+      console.error('Get clinics error:', error);
+      return [];
+    }
+  }
+
   async createPatient(patientData: Partial<Patient>): Promise<Patient> {
     return await clinicApiRequest.post<Patient>('/api/patients', patientData);
   }
 
   async updatePatient(id: string, patientData: Partial<Patient>): Promise<Patient> {
     return await clinicApiRequest.put<Patient>(`/api/patients/${id}`, patientData);
+  }
+
+  async getRecentAppointments(): Promise<Appointment[]> {
+    try {
+      return clinicApiRequest.get<Appointment[]>('/api/dashboard/recent-appointments');
+    } catch (error) {
+      console.error('Get recent appointments error:', error);
+      return [];
+    }
   }
 
   // Appointments API
@@ -175,7 +193,7 @@ class ClinicApiService {
   // Dashboard Stats
   async getDashboardStats() {
     try {
-      return await clinicApiRequest.get('/api/dashboard/stats');
+      return await clinicApiRequest.get('/api/dashboard');
     } catch (error) {
       console.error('Get dashboard stats error:', error);
       // Return mock data for demo

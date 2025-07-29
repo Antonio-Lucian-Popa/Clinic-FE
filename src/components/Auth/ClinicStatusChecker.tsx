@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { clinicApiService } from '@/services/clinicApiService';
 
 
 interface ClinicStatusCheckerProps {
@@ -38,15 +39,17 @@ function ClinicStatusChecker({ children }: ClinicStatusCheckerProps) {
     try {
       // API call pentru a verifica statusul cabinetului utilizatorului
       // const response = await clinicApiRequest.get('/api/user/clinic-status');
-      
-      // Mock logic pentru demo
-      const mockStatus: ClinicStatus = {
-        hasClinic: false, // Simulăm că nu are cabinet
-        isOwner: !!user?.roles?.includes('OWNER'),
-        needsInvitation: user?.roles?.includes('DOCTOR') || user?.roles?.includes('ASSISTANT')
-      };
+      const clinics = await clinicApiService.getClinics();
+      if(clinics && clinics.length > 0) {
+        const clinicStatus: ClinicStatus = {
+          hasClinic: true,
+          isOwner: !!user?.roles?.includes('OWNER'),
+          clinicId: clinics[0].id, // Presupunem că utilizatorul are un singur cabinet
+          needsInvitation: user?.roles?.includes('DOCTOR') || user?.roles?.includes('ASSISTANT')
+        };
 
-      setClinicStatus(mockStatus);
+         setClinicStatus(clinicStatus);
+      }
     } catch (error) {
       console.error('Failed to check clinic status:', error);
       // În caz de eroare, permitem accesul

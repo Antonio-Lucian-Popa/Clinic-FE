@@ -47,7 +47,7 @@ function Dashboard() {
       setIsLoading(true);
       const [dashboardStats, appointments] = await Promise.all([
         clinicApiService.getDashboardStats(),
-        clinicApiService.getAppointments()
+        clinicApiService.getRecentAppointments()
       ]);
       
       setStats(dashboardStats);
