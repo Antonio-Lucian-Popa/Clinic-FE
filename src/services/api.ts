@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { toast } from 'sonner';
 
-const AUTH_SERVER_URL =  'http://localhost:8080';
+const AUTH_SERVER_URL =  import.meta.env.VITE_AUTH_SERVER_URL || 'http://localhost:8080';
 const CLINIC_API_URL = import.meta.env.VITE_CLINIC_API_URL || 'http://localhost:8081';
 
 // Create axios instances
