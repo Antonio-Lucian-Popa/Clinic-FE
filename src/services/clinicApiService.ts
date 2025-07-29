@@ -44,6 +44,17 @@ export interface MedicalRecord {
   followUpDate?: string;
 }
 
+export interface Clinic {
+  id: string;
+  name: string;
+  description?: string;
+  phone: string;
+  email?: string;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 class ClinicApiService {
   // Patients API
   async getPatients(): Promise<Patient[]> {
@@ -85,6 +96,10 @@ class ClinicApiService {
         }
       ];
     }
+  }
+
+  async createClinic(clinicData: Partial<Clinic>): Promise<Clinic> {
+    return await clinicApiRequest.post<Clinic>('/api/cabinets', clinicData);
   }
 
   async createPatient(patientData: Partial<Patient>): Promise<Patient> {
