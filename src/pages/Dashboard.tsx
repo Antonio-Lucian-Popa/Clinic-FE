@@ -89,7 +89,7 @@ function Dashboard() {
     },
     {
       title: 'Revenue This Month',
-      value: `$${stats.revenueThisMonth.toLocaleString()}`,
+      value: `${stats.revenueThisMonth.toLocaleString()}`,
       icon: DollarSign,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50 dark:bg-purple-900/20',
