@@ -27,6 +27,7 @@ import { toast } from 'sonner';
 
 function Patients() {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [newPatientsThisMonth, setNewPatientsThisMonth] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
@@ -39,7 +40,9 @@ function Patients() {
     try {
       setIsLoading(true);
       const patientsData = await clinicApiService.getPatients();
+      const newPatients = await clinicApiService.getNewPatientsThisMonth();
       setPatients(patientsData);
+      setNewPatientsThisMonth(newPatients);
     } catch (error) {
       console.error('Failed to load patients:', error);
       toast.error('Failed to load patients');
@@ -144,7 +147,7 @@ function Patients() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">New This Month</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{newPatientsThisMonth ? newPatientsThisMonth.toString() : '0'}</p>
               </div>
               <Calendar className="h-8 w-8 text-green-600" />
             </div>

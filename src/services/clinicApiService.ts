@@ -115,6 +115,11 @@ class ClinicApiService {
     return await clinicApiRequest.post<Patient>('/api/patients', patientData);
   }
 
+  async getNewPatientsThisMonth(): Promise<number> {
+    const response = await clinicApiRequest.get('/api/patients/stats/new-this-month');
+    return response.data;
+  }
+
   async updatePatient(id: string, patientData: Partial<Patient>): Promise<Patient> {
     return await clinicApiRequest.put<Patient>(`/api/patients/${id}`, patientData);
   }
