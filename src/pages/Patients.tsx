@@ -8,7 +8,11 @@ import {
   Mail,
   Phone,
   Calendar,
-  FileText
+  FileText,
+  Eye,
+  Edit,
+  History,
+  CalendarPlus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +23,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { clinicApiService, type Patient } from '../services/clinicApiService';
@@ -31,6 +36,12 @@ function Patients() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
+  const [isPatientDetailsModalOpen, setIsPatientDetailsModalOpen] = useState(false);
+  const [isPatientEditModalOpen, setIsPatientEditModalOpen] = useState(false);
+  const [isMedicalHistoryModalOpen, setIsMedicalHistoryModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   useEffect(() => {
     loadPatients();
@@ -72,6 +83,26 @@ function Patients() {
     }
 
     return age;
+  };
+
+  const handleViewDetails = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setIsPatientDetailsModalOpen(true);
+  };
+
+  const handleEditPatient = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setIsPatientEditModalOpen(true);
+  };
+
+  const handleMedicalHistory = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setIsMedicalHistoryModalOpen(true);
+  };
+
+  const handleScheduleAppointment = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setIsAppointmentModalOpen(true);
   };
 
   if (isLoading) {
@@ -197,10 +228,23 @@ function Patients() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem>Edit Patient</DropdownMenuItem>
-                    <DropdownMenuItem>Medical History</DropdownMenuItem>
-                    <DropdownMenuItem>Schedule Appointment</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleViewDetails(patient)}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      View Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleEditPatient(patient)}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit Patient
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => handleMedicalHistory(patient)}>
+                      <History className="mr-2 h-4 w-4" />
+                      Medical History
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleScheduleAppointment(patient)}>
+                      <CalendarPlus className="mr-2 h-4 w-4" />
+                      Schedule Appointment
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -295,6 +339,35 @@ function Patients() {
           </Button>
         </div>
       )}
+
+      {/* Appointment Modal */}
+      <AppointmentModal 
+        isOpen={isAppointmentModalOpen} 
+        onClose={() => setIsAppointmentModalOpen(false)}
+        selectedPatient={selectedPatient}
+      />
+
+      {/* Patient Details Modal */}
+      <PatientDetailsModal 
+        isOpen={isPatientDetailsModalOpen} 
+        onClose={() => setIsPatientDetailsModalOpen(false)}
+        patient={selectedPatient}
+      />
+
+      {/* Patient Edit Modal */}
+      <PatientEditModal 
+        isOpen={isPatientEditModalOpen} 
+        onClose={() => setIsPatientEditModalOpen(false)}
+        patient={selectedPatient}
+        onPatientUpdated={loadPatients}
+      />
+
+      {/* Medical History Modal */}
+      <MedicalHistoryModal 
+        isOpen={isMedicalHistoryModalOpen} 
+        onClose={() => setIsMedicalHistoryModalOpen(false)}
+        patient={selectedPatient}
+      />
 
       {/* Patient Modal */}
       <PatientModal
