@@ -24,12 +24,13 @@ interface AppointmentModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedDate?: string;
+  selectedPatient?: any;
 }
 
-function AppointmentModal({ isOpen, onClose, selectedDate }: AppointmentModalProps) {
+function AppointmentModal({ isOpen, onClose, selectedDate, selectedPatient }: AppointmentModalProps) {
   const [formData, setFormData] = useState({
-    patientName: '',
-    patientEmail: '',
+    patientName: selectedPatient?.firstName + ' ' + selectedPatient?.lastName || '',
+    patientEmail: selectedPatient?.email || '',
     date: selectedDate || '',
     time: '',
     duration: '30',
@@ -37,6 +38,16 @@ function AppointmentModal({ isOpen, onClose, selectedDate }: AppointmentModalPro
     notes: ''
   });
 
+  // Update form data when selectedPatient changes
+  useEffect(() => {
+    if (selectedPatient) {
+      setFormData(prev => ({
+        ...prev,
+        patientName: `${selectedPatient.firstName} ${selectedPatient.lastName}`,
+        patientEmail: selectedPatient.email
+      }));
+    }
+  }, [selectedPatient]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
