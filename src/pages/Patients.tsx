@@ -29,6 +29,10 @@ import {
 import { clinicApiService, type Patient } from '../services/clinicApiService';
 import PatientModal from '../components/Modals/PatientModal';
 import { toast } from 'sonner';
+import AppointmentModal from '@/components/Modals/AppointmentModal';
+import PatientDetailsModal from '@/components/Modals/PatientDetailsModal';
+import PatientEditModal from '@/components/Modals/PatientEditModal';
+import MedicalHistoryModal from '@/components/Modals/MedicalHistoryModal';
 
 function Patients() {
   const [patients, setPatients] = useState<Patient[]>([]);
