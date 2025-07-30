@@ -299,7 +299,10 @@ function Patients() {
       {/* Patient Modal */}
       <PatientModal
         isOpen={isPatientModalOpen}
-        onClose={() => setIsPatientModalOpen(false)}
+        onClose={() => {
+          setIsPatientModalOpen(false);
+          loadPatients(); // Reload patients after modal closes
+        }}
       />
     </div>
   );
