@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { clinicApiService } from '@/services/clinicApiService';
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -59,6 +60,22 @@ function PatientModal({ isOpen, onClose }: PatientModalProps) {
     try {
       // Here you would call your API to create the patient
       console.log('Creating patient:', formData);
+
+      // ✨ Normalizează și curăță listele
+      const cleanList = (input: string) =>
+        input
+          .split(',')
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0);
+
+      const payload = {
+        ...formData,
+        medicalHistory: cleanList(formData.medicalHistory),
+        allergies: cleanList(formData.allergies),
+      };
+
+      await clinicApiService.createPatient(payload);
+
       toast.success('Patient added successfully!');
       onClose();
       // Reset form
@@ -96,7 +113,7 @@ function PatientModal({ isOpen, onClose }: PatientModalProps) {
           {/* Personal Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white">Personal Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
@@ -234,7 +251,7 @@ function PatientModal({ isOpen, onClose }: PatientModalProps) {
           {/* Medical Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white">Medical Information</h3>
-            
+
             <div className="space-y-2">
               <Label htmlFor="medicalHistory">Medical History</Label>
               <div className="relative">
@@ -248,6 +265,9 @@ function PatientModal({ isOpen, onClose }: PatientModalProps) {
                   className="pl-10 min-h-[80px]"
                 />
               </div>
+              <small className="text-xs text-gray-500">
+                Separate multiple entries with commas, e.g. "Diabetes, Hypertension"
+              </small>
             </div>
 
             <div className="space-y-2">
@@ -263,6 +283,9 @@ function PatientModal({ isOpen, onClose }: PatientModalProps) {
                   className="pl-10 min-h-[60px]"
                 />
               </div>
+              <small className="text-xs text-gray-500">
+                Separate multiple entries with commas, e.g. "Peanuts, Penicillin"
+              </small>
             </div>
           </div>
 
