@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { toast } from 'sonner';
 
 const AUTH_SERVER_URL =  import.meta.env.VITE_AUTH_SERVER_URL || 'http://localhost:8080';
-const CLINIC_API_URL = import.meta.env.VITE_CLINIC_API_URL || 'http://localhost:8081';
+const CLINIC_API_URL = import.meta.env.VITE_CLINIC_API_URL || 'http://localhost:8080';
 
 // Create axios instances
 export const authApi: AxiosInstance = axios.create({

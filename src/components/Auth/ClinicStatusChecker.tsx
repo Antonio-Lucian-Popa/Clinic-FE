@@ -49,6 +49,8 @@ function ClinicStatusChecker({ children }: ClinicStatusCheckerProps) {
         };
 
          setClinicStatus(clinicStatus);
+      } else {
+        setClinicStatus({ hasClinic: false, isOwner: !!user?.roles?.includes('OWNER') });
       }
     } catch (error) {
       console.error('Failed to check clinic status:', error);
