@@ -1,5 +1,17 @@
 import { clinicApiRequest } from './api';
 
+export interface PagePacients {
+  content: Patient[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
 export interface Patient {
   id: string;
   firstName: string;
@@ -57,44 +69,20 @@ export interface Clinic {
 
 class ClinicApiService {
   // Patients API
-  async getPatients(): Promise<Patient[]> {
+  async getPatients({ page, size }: { page: number; size: number }): Promise<PagePacients> {
     try {
-      return await clinicApiRequest.get<Patient[]>('/api/patients');
+      return await clinicApiRequest.get<PagePacients>(`/api/patients?page=${page}&size=${size}`);
     } catch (error) {
       console.error('Get patients error:', error);
       // Return mock data for demo
-      return [
-        {
-          id: '1',
-          firstName: 'Maria',
-          lastName: 'Popescu',
-          email: 'maria.popescu@email.com',
-          phone: '+40 123 456 789',
-          dateOfBirth: '1985-03-15',
-          gender: 'female',
-          address: 'Str. Florilor 10, București',
-          emergencyContact: '+40 987 654 321',
-          medicalHistory: ['Hipertensiune', 'Diabet tip 2'],
-          allergies: ['Penicilină'],
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-15T10:00:00Z'
-        },
-        {
-          id: '2',
-          firstName: 'Ion',
-          lastName: 'Gheorghe',
-          email: 'ion.gheorghe@email.com',
-          phone: '+40 123 456 790',
-          dateOfBirth: '1990-07-22',
-          gender: 'male',
-          address: 'Bd. Unirii 25, București',
-          emergencyContact: '+40 987 654 322',
-          medicalHistory: ['Astm bronșic'],
-          allergies: [],
-          createdAt: '2024-01-16T11:00:00Z',
-          updatedAt: '2024-01-16T11:00:00Z'
-        }
-      ];
+      return {
+        content: [],
+        totalElements: 0,
+        totalPages: 0,
+        size: size,
+        number: page,
+        numberOfElements: 0
+      };
     }
   }
 
@@ -117,7 +105,7 @@ class ClinicApiService {
 
   async getNewPatientsThisMonth(): Promise<number> {
     const response = await clinicApiRequest.get('/api/patients/stats/new-this-month');
-    return response.data;
+    return response;
   }
 
   async updatePatient(id: string, patientData: Partial<Patient>): Promise<Patient> {
