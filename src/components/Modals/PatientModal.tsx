@@ -56,45 +56,51 @@ function PatientModal({ isOpen, onClose }: PatientModalProps) {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      // Here you would call your API to create the patient
-      console.log('Creating patient:', formData);
+  e.preventDefault();
+  try {
+    const cleanList = (input: string) =>
+      input
+        .split(',')
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
 
-      // ✨ Normalizează și curăță listele
-      const cleanList = (input: string) =>
-        input
-          .split(',')
-          .map((s) => s.trim())
-          .filter((s) => s.length > 0);
+    const cabinetId = localStorage.getItem('currentClinicId'); // sau din Zustand / context
 
-      const payload = {
-        ...formData,
-        medicalHistory: cleanList(formData.medicalHistory),
-        allergies: cleanList(formData.allergies),
-      };
-
-      await clinicApiService.createPatient(payload);
-
-      toast.success('Patient added successfully!');
-      onClose();
-      // Reset form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        dateOfBirth: '',
-        gender: '',
-        address: '',
-        emergencyContact: '',
-        medicalHistory: '',
-        allergies: ''
-      });
-    } catch (error) {
-      toast.error('Failed to add patient');
+    if (!cabinetId) {
+      toast.error('No cabinet selected. Please try again.');
+      return;
     }
-  };
+
+    const payload = {
+      ...formData,
+      medicalHistory: cleanList(formData.medicalHistory),
+      allergies: cleanList(formData.allergies),
+      cabinetId
+    };
+
+    await clinicApiService.createPatient(payload);
+
+    toast.success('Patient added successfully!');
+    onClose();
+    // Reset form
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      dateOfBirth: '',
+      gender: '',
+      address: '',
+      emergencyContact: '',
+      medicalHistory: '',
+      allergies: ''
+    });
+  } catch (error) {
+    console.error(error);
+    toast.error('Failed to add patient');
+  }
+};
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

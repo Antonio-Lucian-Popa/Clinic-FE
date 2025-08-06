@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Building2, MapPin, Phone, Mail, Save, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,9 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { clinicApiService } from '@/services/clinicApiService';
+import { useClinic } from '@/contexts/ClinicContex';
 
 function ClinicSetupPage() {
+  const { createClinic } = useClinic();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -43,14 +45,17 @@ function ClinicSetupPage() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      // API call pentru crearea cabinetului
-      console.log('Creating clinic:', formData);
-      const data = await clinicApiService.createClinic(formData);
-      if(data) {
-        toast.success('Cabinetul a fost creat cu succes!');
-        // Redirect la dashboard
-        window.location.href = '/dashboard';
-      }
+      await createClinic({
+        name: formData.name,
+        description: formData.description,
+        address: formData.address,
+        phone: formData.phone,
+        email: formData.email,
+        website: formData.website,
+        specialties: formData.specialties.split(',').map(s => s.trim()).filter(s => s)
+      });
+      // Redirect la dashboard
+      window.location.href = '/dashboard';
     } catch (error) {
       toast.error('Eroare la crearea cabinetului');
     } finally {
@@ -101,7 +106,7 @@ function ClinicSetupPage() {
                   </div>
                 </div>
 
-                {/* <div className="space-y-2">
+                <div className="space-y-2">
                   <Label htmlFor="description">Descriere</Label>
                   <Textarea
                     id="description"
@@ -111,8 +116,7 @@ function ClinicSetupPage() {
                     placeholder="Descrierea serviciilor oferite..."
                     rows={3}
                   />
-                 */}
-                 </div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -131,7 +135,7 @@ function ClinicSetupPage() {
                     </div>
                   </div>
 
-                  {/* <div className="space-y-2">
+                  <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -147,7 +151,7 @@ function ClinicSetupPage() {
                       />
                     </div>
                   </div>
-                </div> */}
+                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="address">Adresa</Label>
@@ -165,7 +169,7 @@ function ClinicSetupPage() {
                   </div>
                 </div>
 
-                {/* <div className="space-y-2">
+                <div className="space-y-2">
                   <Label htmlFor="specialties">Specialități</Label>
                   <Input
                     id="specialties"
@@ -185,7 +189,7 @@ function ClinicSetupPage() {
                     onChange={handleInputChange}
                     placeholder="https://www.cabinet.ro"
                   />
-                </div> */}
+                </div>
               </div>
 
               {/* Action Buttons */}

@@ -1,3 +1,4 @@
+import { UserClinicRole } from '@/contexts/ClinicContex';
 import { clinicApiRequest } from './api';
 
 export interface PagePacients {
@@ -81,13 +82,43 @@ class ClinicApiService {
         totalPages: 0,
         size: size,
         number: page,
-        numberOfElements: 0
+        numberOfElements: 0,
+        first: true,
+        last: true,
+        empty: true
       };
+    }
+  }
+
+  async getUserClinics(): Promise<Clinic[]> {
+    try {
+      return await clinicApiRequest.get<Clinic[]>('/api/cabinets');
+    } catch (error) {
+      console.error('Get user clinics error:', error);
+      throw error;
+    }
+  }
+
+  async joinClinic(inviteCode: string): Promise<void> {
+    try {
+      await clinicApiRequest.post('/api/clinics/join', { inviteCode });
+    } catch (error) {
+      console.error('Join clinic error:', error);
+      throw error;
     }
   }
 
   async createClinic(clinicData: Partial<Clinic>): Promise<Clinic> {
     return await clinicApiRequest.post<Clinic>('/api/cabinets', clinicData);
+  }
+
+    async generateInviteCode(clinicId: string): Promise<{ inviteCode: string; expiresAt: string }> {
+    try {
+      return await clinicApiRequest.post(`/api/clinics/${clinicId}/invite`);
+    } catch (error) {
+      console.error('Generate invite code error:', error);
+      throw error;
+    }
   }
 
   async getClinics(): Promise<Clinic[]> {

@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Calendar, 
+import {
+  LayoutDashboard,
+  Users,
+  Calendar,
   CalendarDays,
-  Settings, 
+  Settings,
   User,
-  Menu,
-  X,
   Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import ClinicSelector from './ClinicSelector';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -32,10 +31,9 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
 
   return (
     <>
-
       {/* Overlay for mobile */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 z-30 bg-gray-900 bg-opacity-50"
           onClick={() => setIsMobileMenuOpen(false)}
         />
@@ -44,11 +42,12 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          'fixed top-0 left-0 z-40 h-screen w-64 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:z-30',
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          'fixed top-0 left-0 z-40 h-screen w-64 transform transition-transform duration-200 ease-in-out bg-white dark:bg-gray-800 shadow-lg',
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
+          'lg:translate-x-0 lg:z-30'
         )}
       >
-        <div className="flex h-full flex-col bg-white dark:bg-gray-800 shadow-lg">
+        <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center justify-center px-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
@@ -59,6 +58,11 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
                 ClinicSaaS
               </span>
             </div>
+          </div>
+
+          {/* Clinic Selector */}
+          <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+            <ClinicSelector />
           </div>
 
           {/* Navigation */}
@@ -77,7 +81,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                   )}
                 >
-                  <item.icon className={cn('mr-3 h-5 w-5 flex-shrink-0')} />
+                  <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
                   {item.name}
                 </Link>
               );

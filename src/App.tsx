@@ -19,6 +19,7 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ClinicStatusChecker from './components/Auth/ClinicStatusChecker';
 import './App.css';
 import ProfileEditPage from './pages/ProfileEditPage';
+import { ClinicProvider } from './contexts/ClinicContex';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
@@ -27,131 +28,133 @@ function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <ThemeProvider>
         <AuthProvider>
-          <Router>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+          <ClinicProvider>
+            <Router>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-               {/* Profile edit route for Google users */}
-              <Route 
-                path="/profile-edit" 
-                element={
-                  <ProtectedRoute>
-                    <ProfileEditPage />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Clinic setup routes */}
-              <Route 
-                path="/clinic-setup" 
-                element={
-                  <ProtectedRoute>
-                    <ClinicSetupPage />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/invitation" 
-                element={
-                  <ProtectedRoute>
-                    <InvitationPage />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Protected routes */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Dashboard />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Dashboard />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/patients"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Patients />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/appointments"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Appointments />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/calendar"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Calendar />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Profile />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/settings"
-                element={
-                  <ProtectedRoute>
-                    <ClinicStatusChecker>
-                      <Layout>
-                        <Settings />
-                      </Layout>
-                    </ClinicStatusChecker>
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Redirect */}
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-            <Toaster />
-          </Router>
+                {/* Profile edit route for Google users */}
+                <Route
+                  path="/profile-edit"
+                  element={
+                    <ProtectedRoute>
+                      <ProfileEditPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Clinic setup routes */}
+                <Route
+                  path="/clinic-setup"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicSetupPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/invitation"
+                  element={
+                    <ProtectedRoute>
+                      <InvitationPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Protected routes */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Dashboard />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Dashboard />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/patients"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Patients />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/appointments"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Appointments />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/calendar"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Calendar />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Profile />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Settings />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Redirect */}
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+              <Toaster />
+            </Router>
+          </ClinicProvider>
         </AuthProvider>
       </ThemeProvider>
     </GoogleOAuthProvider>

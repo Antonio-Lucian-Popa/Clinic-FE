@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { UserPlus, Mail, Copy, ExternalLink, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
+import { useClinic } from '@/contexts/ClinicContex';
 
 function InvitationPage() {
+  const { joinClinic } = useClinic();
   const [inviteCode, setInviteCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,9 +24,7 @@ function InvitationPage() {
 
     try {
       setIsLoading(true);
-      // API call pentru a se alătura cabinetului cu codul
-      console.log('Joining with code:', inviteCode);
-      toast.success('Te-ai alăturat cu succes cabinetului!');
+      await joinClinic(inviteCode);
       window.location.href = '/dashboard';
     } catch (error) {
       toast.error('Cod de invitație invalid sau expirat');
@@ -63,6 +64,7 @@ function InvitationPage() {
           <CardContent className="space-y-6">
             <form onSubmit={handleJoinWithCode} className="space-y-4">
               <div className="space-y-2">
+                <Label htmlFor="inviteCode">Cod de Invitație</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <Input
