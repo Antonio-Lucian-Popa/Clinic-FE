@@ -19,6 +19,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { clinicApi } from '@/services/api';
+import { clinicApiService } from '@/services/clinicApiService';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -68,6 +70,12 @@ function AppointmentModal({ isOpen, onClose, selectedDate, selectedPatient }: Ap
     try {
       // Here you would call your API to create the appointment
       console.log('Creating appointment:', formData);
+
+      clinicApiService.createAppointment({
+        ...formData,
+        duration: Number(formData.duration)
+      })
+
       toast.success('Appointment scheduled successfully!');
       onClose();
       // Reset form

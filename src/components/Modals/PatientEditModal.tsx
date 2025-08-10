@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import type { Patient } from '../../services/clinicApiService';
+import { clinicApiService, type Patient } from '../../services/clinicApiService';
 
 interface PatientEditModalProps {
   isOpen: boolean;
@@ -79,14 +79,25 @@ function PatientEditModal({ isOpen, onClose, patient, onPatientUpdated }: Patien
     e.preventDefault();
     if (!patient) return;
 
+    const cabinetId = localStorage.getItem('currentClinicId'); // sau din Zustand / context
+    if (!cabinetId) {
+      toast.error('No clinic selected. Please select a clinic first.');
+      return;
+    }
+
+
     try {
       setIsLoading(true);
       // Here you would call your API to update the patient
       const updatedPatientData = {
         ...formData,
         medicalHistory: formData.medicalHistory.split(',').map(item => item.trim()).filter(item => item),
-        allergies: formData.allergies.split(',').map(item => item.trim()).filter(item => item)
+        allergies: formData.allergies.split(',').map(item => item.trim()).filter(item => item),
+        cabinetId: cabinetId
       };
+
+      // Assuming clinicApiService.updatePatient is the API call to update the patient
+      await clinicApiService.updatePatient(patient.id, updatedPatientData);
       
       console.log('Updating patient:', updatedPatientData);
       toast.success('Patient updated successfully!');

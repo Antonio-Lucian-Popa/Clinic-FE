@@ -139,7 +139,7 @@ function ClinicStatusChecker({ children }: ClinicStatusCheckerProps) {
     try {
       const mockStatus: ClinicStatus = {
         hasClinic: userClinics.length > 0,
-        isOwner: user?.roles?.includes('OWNER'),
+        isOwner: !!user?.roles?.includes('OWNER'),
         needsInvitation: user?.roles?.includes('DOCTOR') || user?.roles?.includes('ASSISTANT')
       };
 
