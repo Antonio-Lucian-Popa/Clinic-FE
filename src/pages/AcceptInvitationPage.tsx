@@ -117,12 +117,9 @@ function AcceptInvitePage() {
     try {
       setIsSubmitting(true);
       
-      // Hash password (în practică ai folosi bcrypt sau similar)
-      const encodedPassword = btoa(formData.password); // Simplificat pentru demo
-      
       await invitationService.acceptInvitation({
         token,
-        encodedPassword,
+        encodedPassword: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName
       });
