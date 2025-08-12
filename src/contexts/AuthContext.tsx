@@ -37,9 +37,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const userData = await authService.login(email, password);
+      await authService.login(email, password);
+      const userData = await authService.getCurrentUser();
       setUser(userData);
       toast.success('Welcome back!');
+      console.log('Login successful:', userData);
+      // Redirect to home or dashboard as needed
+      if (userData) {
+        const isUserRole = userData.roles.includes('USER');
+        // Redirect to home or dashboard as needed
+        if (!isUserRole) {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/update-profile';
+        }
+      }
     } catch (error: any) {
       toast.error(error.message || 'Login failed');
       throw error;

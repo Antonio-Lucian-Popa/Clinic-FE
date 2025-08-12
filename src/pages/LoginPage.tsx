@@ -157,16 +157,7 @@ function LoginPage() {
                 width="100%"
               />
             </div>
-
-            {/* Demo credentials */}
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-2">Demo Credentials:</p>
-              <p className="text-xs text-blue-600 dark:text-blue-400">
-                Email: doctor@clinic.com<br />
-                Password: password123
-              </p>
-            </div>
-
+            
             {/* Register link */}
             <div className="text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400">
