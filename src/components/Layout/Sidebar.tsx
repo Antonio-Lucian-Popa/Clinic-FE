@@ -7,16 +7,19 @@ import {
   CalendarDays,
   Settings,
   User,
-  Activity
+  Activity,
+  UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ClinicSelector from './ClinicSelector';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Patients', href: '/patients', icon: Users },
   { name: 'Appointments', href: '/appointments', icon: Calendar },
   { name: 'Calendar', href: '/calendar', icon: CalendarDays },
+   { name: 'Invitations', href: '/invitations', icon: UserPlus, ownerOnly: true },
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
@@ -28,6 +31,10 @@ interface SidebarProps {
 
 function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
   const location = useLocation();
+
+  const { user } = useAuth();
+
+  const isOwner = user?.roles?.includes('OWNER');
 
   return (
     <>
@@ -66,8 +73,8 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {navigation.map((item) => {
+         <nav className="flex-1 px-4 py-6 space-y-2">
+            {navigation.filter(item => !item.ownerOnly || isOwner).map((item) => {
               const isActive = location.pathname === item.href;
               return (
                 <Link
@@ -81,7 +88,7 @@ function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                   )}
                 >
-                  <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                  <item.icon className={cn('mr-3 h-5 w-5 flex-shrink-0')} />
                   {item.name}
                 </Link>
               );

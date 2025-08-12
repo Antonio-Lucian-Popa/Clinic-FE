@@ -20,6 +20,8 @@ import ClinicStatusChecker from './components/Auth/ClinicStatusChecker';
 import './App.css';
 import ProfileEditPage from './pages/ProfileEditPage';
 import { ClinicProvider } from './contexts/ClinicContex';
+import Invitations from './pages/Invitations';
+import AcceptInvitePage from './pages/AcceptInvitationPage';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
@@ -34,6 +36,7 @@ function App() {
                 {/* Public routes */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/accept-invite" element={<AcceptInvitePage />} />
 
                 {/* Profile edit route for Google users */}
                 <Route
@@ -143,6 +146,19 @@ function App() {
                       <ClinicStatusChecker>
                         <Layout>
                           <Settings />
+                        </Layout>
+                      </ClinicStatusChecker>
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/invitations"
+                  element={
+                    <ProtectedRoute>
+                      <ClinicStatusChecker>
+                        <Layout>
+                          <Invitations />
                         </Layout>
                       </ClinicStatusChecker>
                     </ProtectedRoute>
