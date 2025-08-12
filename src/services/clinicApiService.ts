@@ -13,6 +13,18 @@ export interface PagePacients {
   empty: boolean;
 }
 
+export interface PageAppointments {
+  content: Appointment[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
 export interface Patient {
   id: string;
   firstName: string;
@@ -153,42 +165,23 @@ class ClinicApiService {
   }
 
   // Appointments API
-  async getAppointments(): Promise<Appointment[]> {
+  async getAppointments(): Promise<PageAppointments> {
     try {
-      return await clinicApiRequest.get<Appointment[]>('/api/appointments');
+      return await clinicApiRequest.get<PageAppointments>('/api/appointments');
     } catch (error) {
       console.error('Get appointments error:', error);
       // Return mock data for demo
-      return [
-        {
-          id: '1',
-          patientId: '1',
-          doctorId: '1',
-          patientName: 'Maria Popescu',
-          doctorName: 'Dr. Sarah Johnson',
-          date: '2024-12-05',
-          time: '10:00',
-          duration: 30,
-          type: 'Consultație generală',
-          status: 'SCHEDULED',
-          notes: 'Control periodic',
-          createdAt: '2024-12-04T10:00:00Z'
-        },
-        {
-          id: '2',
-          patientId: '2',
-          doctorId: '1',
-          patientName: 'Ion Gheorghe',
-          doctorName: 'Dr. Sarah Johnson',
-          date: '2024-12-05',
-          time: '14:30',
-          duration: 45,
-          type: 'Consultație specialistă',
-          status: 'CONFIRMED',
-          notes: 'Evaluare astm',
-          createdAt: '2024-12-04T11:00:00Z'
-        }
-      ];
+      return {
+        content: [],
+        totalElements: 0,
+        totalPages: 0,
+        size: 0,
+        number: 0,
+        numberOfElements: 0,
+        first: true,
+        last: true,
+        empty: true
+      };
     }
   }
 
