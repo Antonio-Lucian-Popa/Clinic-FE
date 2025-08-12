@@ -80,6 +80,14 @@ export interface Clinic {
   updatedAt: string;
 }
 
+export interface Doctor {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  specialty: string;
+}
+
 class ClinicApiService {
   // Patients API
   async getPatients({ page, size }: { page: number; size: number }): Promise<PagePacients> {
@@ -223,6 +231,10 @@ class ClinicApiService {
         revenueThisMonth: 15420
       };
     }
+  }
+
+  getDoctorsByClinic(clinicId: string): Promise<Doctor[]> {
+    return clinicApiRequest.get<Doctor[]>(`/api/doctor-assistants/doctor/by-clinic/${clinicId}`);
   }
 }
 
