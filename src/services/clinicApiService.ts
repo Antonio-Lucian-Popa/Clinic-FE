@@ -1,92 +1,15 @@
 import { UserClinicRole } from '@/contexts/ClinicContex';
 import { clinicApiRequest } from './api';
 
-export interface PagePacients {
-  content: Patient[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  numberOfElements: number;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
-
-export interface PageAppointments {
-  content: Appointment[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  numberOfElements: number;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
-
-export interface Patient {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: string;
-  gender: string;
-  address: string;
-  emergencyContact: string;
-  medicalHistory: string[];
-  allergies: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Appointment {
-  id: string;
-  patientId: string;
-  doctorId: string;
-  patientName: string;
-  doctorName: string;
-  date: string;
-  time: string;
-  duration: number;
-  type: string;
-  status: 'SCHEDULED' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
-  notes?: string;
-  createdAt: string;
-}
-
-export interface MedicalRecord {
-  id: string;
-  patientId: string;
-  doctorId: string;
-  date: string;
-  diagnosis: string;
-  symptoms: string[];
-  treatment: string;
-  prescription: string[];
-  notes: string;
-  followUpDate?: string;
-}
-
-export interface Clinic {
-  id: string;
-  name: string;
-  description?: string;
-  phone: string;
-  email?: string;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Doctor {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  specialty: string;
-}
+import {
+  Appointment,
+  Clinic,
+  Doctor,
+  MedicalRecord,
+  PageAppointments,
+  PagePacients,
+  Patient
+} from '../services/types';
 
 class ClinicApiService {
   // Patients API
@@ -236,6 +159,24 @@ class ClinicApiService {
   getDoctorsByClinic(clinicId: string): Promise<Doctor[]> {
     return clinicApiRequest.get<Doctor[]>(`/api/doctor-assistants/doctor/by-clinic/${clinicId}`);
   }
+
+  // +++ NEW: caută pacienți dintr-un cabinet, cu paginare + query
+async getPatientsByCabinet(
+  cabinetId: string,
+  opts: { page: number; size: number; q?: string }
+): Promise<PagePacients> {
+  const params = new URLSearchParams({
+    page: String(opts.page),
+    size: String(opts.size),
+  });
+  if (opts.q && opts.q.trim().length > 0) {
+    params.set('q', opts.q.trim()); // <-- back-end-ul tău așteaptă 'q'
+  }
+  return await clinicApiRequest.get<PagePacients>(
+    `/api/patients/by-cabinet/${cabinetId}?${params.toString()}`
+  );
+}
+
 }
 
 export const clinicApiService = new ClinicApiService();

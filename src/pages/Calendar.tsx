@@ -29,7 +29,7 @@ function Calendar() {
     try {
       setIsLoading(true);
       const appointmentsData = await clinicApiService.getAppointments();
-      setAppointments(appointmentsData);
+      setAppointments(appointmentsData.content);
     } catch (error) {
       console.error('Failed to load appointments:', error);
       toast.error('Failed to load appointments');
